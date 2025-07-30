@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: jaffle_shop_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jaffle_shop
+      POSTGRES_USER: ${POSTGRES_USER:-jaffle_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-jaffle_password}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-jaffle_user} -d jaffle_shop"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - jaffle_network
+
+  dbt:
+    build: .
+    container_name: jaffle_shop_dbt
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-jaffle_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-jaffle_password}
+    volumes:
+      - .:/app
+      - dbt_profiles:/root/.dbt
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - jaffle_network
+    # Keep container running for interactive use
+    command: tail -f /dev/null
+
+volumes:
+  postgres_data:
+    driver: local
+  dbt_profiles:
+    driver: local
+
+networks:
+  jaffle_network:
+    driver: bridge

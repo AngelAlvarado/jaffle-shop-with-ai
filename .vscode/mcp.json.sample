@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "dbt": {
+      "command": "/absolute/path/to/your/.local/bin/uvx",
+      "args": [
+        "--env-file",
+        "/absolute/path/to/your/jaffle-shop/.env.local",
+        "dbt-mcp"
+      ]
+    }
+  }
+}
