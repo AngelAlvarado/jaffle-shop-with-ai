@@ -117,7 +117,7 @@ DISABLE_DBT_CLI=false
 DISABLE_SEMANTIC_LAYER=true
 DISABLE_DISCOVERY=true
 DISABLE_REMOTE=true
-DBT_PROJECT_DIR=/Users/angel/code/jaffle-shop  # Update this path!
+DBT_PROJECT_DIR=/Users/username/code/jaffle-shop  # Update this path!
 DBT_PATH=dbt
 DBT_CLI_TIMEOUT=30
 ```
