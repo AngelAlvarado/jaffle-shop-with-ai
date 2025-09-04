@@ -12,26 +12,28 @@ This project demonstrates **AI-enhanced dbt development** using **MCP (Model Con
 ## 🏗️ Quick Start
 
 ### Prerequisites
+
 - Docker and Docker Compose
 - Python 3.9+
-- **macOS or Windows** (Claude Desktop not available on Linux)
+- Claude Desktop
 
 ### 1. Download and Install Claude Desktop
 
 **Download Claude Desktop:**
-- **macOS**: Download from [claude.ai/download](https://claude.ai/download)
-- **Windows**: Download from [claude.ai/download](https://claude.ai/download)
 
-> **⚠️ Important**: Claude Desktop is **not available on Linux**. Linux users should use Claude Code via the web interface or consider using VSCode with MCP integration instead.
+- **macOS or Windows**: [Mac/Windows](https://claude.ai/download) 
+- **Claude Desktop Linux Debian**: [Linux Debian](https://github.com/AngelAlvarado/claude-desktop-debian-based/tree/main)
 
 **Install and sign in:**
-1. Install the downloaded application
+
+1. Install the application
 2. Sign in with your Claude account
 3. Verify Claude Desktop is running
 
 ### 2. Download and Install Claude Code
 
 **Download Claude Code:**
+
 ```bash
 # macOS (via Homebrew)
 brew install claude
@@ -41,6 +43,7 @@ brew install claude
 ```
 
 **Verify installation:**
+
 ```bash
 claude --version
 ```
@@ -49,8 +52,8 @@ claude --version
 
 ```bash
 # Clone and enter the project
-git clone <your-repo>
-cd jaffle-shop
+git clone https://github.com/AngelAlvarado/jaffle-shop-with-ai
+cd jaffle-shop-with-ai
 
 # Start PostgreSQL and dbt containers
 docker-compose up -d
@@ -65,32 +68,32 @@ docker exec -it jaffle_shop_dbt dbt build
 ### 4. Install and Configure MCP Server
 
 **Install MCP prerequisites:**
+
 ```bash
+
 # Install uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 source ~/.local/bin/env
 
 # Install dbt for MCP integration
-pip install dbt-core dbt-postgres
+uv tool install dbt-core
 
-# Install the dbt MCP server
-uvx install dbt-mcp
-```
-
-**Test MCP server:**
-```bash
-# Verify the MCP server works
+# Install and test the dbt MCP server
 uvx dbt-mcp --help
 ```
 
-### 5. Configure Claude Desktop MCP Integration
+**Verify installation:**
 
-> **Note**: This step requires Claude Desktop (macOS/Windows only)
+The `uvx dbt-mcp --help` command above will show environment variable errors - this is expected and means the MCP server is installed correctly.
+
+### 5. Configure Claude Desktop MCP Integration
 
 **Create MCP configuration:**
 
 Add to your Claude Desktop config file:
+
 - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.config/Claude/claude_desktop_config.json`
 - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
@@ -100,7 +103,7 @@ Add to your Claude Desktop config file:
       "command": "uvx",
       "args": [
         "--env-file",
-        "/absolute/path/to/your/jaffle-shop/.env.local",
+        "/absolute/path/to/your/jaffle-shop-with-ai/.env.local",
         "dbt-mcp"
       ]
     }
@@ -108,16 +111,17 @@ Add to your Claude Desktop config file:
 }
 ```
 
-**Important**: Replace `/absolute/path/to/your/jaffle-shop/` with your actual project path.
+**Important**: Replace `/absolute/path/to/your/jaffle-shop-with-ai/` with your actual project path.
 
 **Verify the .env.local file exists:**
+
 The project includes a `.env.local` file with:
 ```bash
 DISABLE_DBT_CLI=false
 DISABLE_SEMANTIC_LAYER=true
 DISABLE_DISCOVERY=true
 DISABLE_REMOTE=true
-DBT_PROJECT_DIR=/Users/username/code/jaffle-shop  # Update this path!
+DBT_PROJECT_DIR=/absolute/path/to/your/jaffle-shop-with-ai
 DBT_PATH=dbt
 DBT_CLI_TIMEOUT=30
 ```
@@ -127,6 +131,7 @@ Update the `DBT_PROJECT_DIR` to match your project location.
 ### 6. Start Using MCP with Claude
 
 **With Claude Desktop (macOS/Windows):**
+
 1. **Restart Claude Desktop** to load the MCP configuration
 2. Open Claude Desktop
 3. Test MCP integration by asking:
@@ -135,9 +140,10 @@ Update the `DBT_PROJECT_DIR` to match your project location.
    - "Run dbt test and show me the results"
 
 **With Claude Code (all platforms):**
+
 ```bash
 # Start Claude Code in your project directory
-cd /path/to/jaffle-shop
+cd /path/to/jaffle-shop-with-ai
 claude code
 ```
 
@@ -148,6 +154,7 @@ Then interact with your dbt project through Claude Code.
 For Linux users or those preferring VSCode:
 
 **Enable MCP in VSCode:**
+
 1. Install the Claude extension for VSCode
 2. Open Settings (Cmd+,) → Features → Chat → Enable "Mcp"
 3. Configuration files are at:
@@ -159,7 +166,7 @@ For Linux users or those preferring VSCode:
 
 ## 🏗️ Architecture
 
-```
+```text
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │ Claude Desktop/ │◄──►│   MCP Server     │◄──►│  dbt + Postgres │
 │ Claude Code     │    │   (dbt-mcp)      │    │   (Docker)      │
@@ -174,12 +181,14 @@ For Linux users or those preferring VSCode:
 ## 📊 Sample Data
 
 The project includes realistic restaurant data:
+
 - **Customers**: Customer profiles and segmentation
 - **Orders**: Transaction history with seasonality
 - **Products**: Menu items with pricing and categories
 - **Stores**: Multi-location restaurant operations
 
 Perfect for exploring:
+
 - Revenue analysis and forecasting
 - Customer lifetime value modeling
 - Product performance analytics
@@ -188,19 +197,22 @@ Perfect for exploring:
 ## 🎯 AI-Enhanced Workflows
 
 ### Data Exploration
-```
+
+```text
 You: "What are our top-selling products this quarter?"
-Claude: [Queries data and shows results with insights]
+Claude Desktop: [Queries data and shows results with insights]
 ```
 
 ### Model Development
-```
+
+```text
 You: "Create a customer segmentation model based on purchase behavior"
 Claude: [Generates SQL model with business logic and tests]
 ```
 
 ### Debugging & Testing
-```
+
+```text
 You: "This test is failing - can you help debug it?"
 Claude: [Analyzes test, identifies issue, suggests fixes]
 ```
@@ -208,7 +220,8 @@ Claude: [Analyzes test, identifies issue, suggests fixes]
 ## 🔧 Development Commands
 
 **Using Claude with MCP:**
-```
+
+```text
 # In Claude Desktop/Code:
 "Run dbt build and show me any errors"
 "Test the customers model"
@@ -217,6 +230,7 @@ Claude: [Analyzes test, identifies issue, suggests fixes]
 ```
 
 **Direct Docker commands:**
+
 ```bash
 # Run specific models
 docker exec -it jaffle_shop_dbt dbt run --select model_name
@@ -232,6 +246,7 @@ docker exec -it jaffle_shop_dbt dbt docs serve --host 0.0.0.0 --port 8080
 ## 🚀 Advanced Usage
 
 ### Generate Larger Datasets
+
 ```bash
 # Generate 3 years of data for more interesting analysis
 docker exec -it jaffle_shop_dbt jafgen 3
@@ -240,6 +255,7 @@ docker exec -it jaffle_shop_dbt dbt seed --full-refresh --vars '{"load_source_da
 ```
 
 ### Multiple Development Targets
+
 The project supports different environments:
 - `dev`: Default development (container-to-container)
 - `local`: Local dbt with Docker PostgreSQL
